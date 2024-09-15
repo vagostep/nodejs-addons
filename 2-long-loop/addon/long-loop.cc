@@ -63,6 +63,7 @@ Napi::Value StartLongLoopAsyncWork(const Napi::CallbackInfo& info) {
     napi_value resource_name;
     napi_create_string_utf8(env, "LongLoopAsyncWork", NAPI_AUTO_LENGTH, &resource_name);
 
+    //
     napi_async_work work;
     napi_create_async_work(env, nullptr, resource_name, LongLoopAsyncWork, CompleteLongLoopAsyncWork, asyncData, &work);
   

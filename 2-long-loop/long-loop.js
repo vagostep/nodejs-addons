@@ -1,7 +1,11 @@
+import http from 'http';
 import { performance } from "node:perf_hooks";
+import { transformMilisecondsToSeconds } from "../utils/utils.js";
 
+const PORT = 3000;
 function compute() {
 
+  console.log('Starting long loop');
   // Start time mark
   performance.mark("intensive-loop-start");
   let result = 0;
@@ -9,24 +13,33 @@ function compute() {
     result += i;
   }
 
+  console.log('Finishing long loop');
   // Stop time mark
   performance.mark("intensive-loop-end");
 
   // Calculating elapse time
-  const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
-
-  console.log(`The function was executed in ${elapsedTime.duration} miliseconds.`);
-
+  performance.measure("intensive-loop-start", "intensive-loop-start");
 }
 
+const server = http.createServer((req, res) => {
 
-/*
-  In order to get metrics for ClinicJs, we executed an interval, so we can have a metric after 5 seconds
-*/
-const interval = setInterval(() => {
+  console.log(`Request to ${req.url}`);
+  // Definir los endpoints
+  if (req.method === 'GET' && req.url === '/long-loop') {
+ 
+    compute();
 
-  compute(); 
-  console.log('do some work...');
-  clearInterval(interval);
+    const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(`The function was executed in ${transformMilisecondsToSeconds(elapsedTime.duration)} seconds.\n`);
+  } else if (req.method === 'GET' && req.url === '/open-server'){
+    
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Server response\n');
+  }
+});
 
-}, 5000);
+server.listen(PORT, () => {
+  console.log(`Server listen on http://localhost:${PORT}`);
+});
+
