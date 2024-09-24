@@ -33,7 +33,7 @@ const server = http.createServer((req, res) => {
     if (req.method === 'GET' && req.url === '/long-loop') {
    
       compute().then((result) => {
-          
+          console.log('result', result);
           res.writeHead(200, { 'Content-Type': 'text/plain' });
           res.end(`The function was executed in ${result} seconds.\n`);
       });

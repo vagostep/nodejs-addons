@@ -1,3 +1,5 @@
 .clinic
-build
+build/*
+*/build/*
 node_modules
+*.zip

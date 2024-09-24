@@ -1,0 +1,23 @@
+{
+  "name": "0-long-loop-aws",
+  "version": "1.0.0",
+  "main": "long-loop-addon-async.js",
+  "gypfile": true,
+  "type": "module",
+  "scripts": {
+    "configure": "node-gyp configure",
+    "build": "node-gyp rebuild",
+    "clean": "node-gyp clean"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^8.1.0"
+  },
+  "devDependencies": {
+    "node-gyp": "^10.2.0"
+  }
+}

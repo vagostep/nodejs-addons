@@ -5,18 +5,15 @@
     "gypfile": true,
     "type": "module",
     "scripts": {
-        "configure": "npx node-gyp configure",
-        "build": "npx node-gyp rebuild",
-        "clean": "npx node-gyp clean",
-        "nsolid": "nsolid --exec 2-long-loop/long-loop.js"
+        "configure": "node-gyp configure",
+        "build": "node-gyp rebuild",
+        "clean": "node-gyp clean",
+        "nsolid": "nsolid"
     },
     "dependencies": {
         "bindings": "^1.5.0",
         "dayjs": "^1.11.13",
         "node-addon-api": "^8.1.0"
-    },
-    "devDependencies": {
-        "clinic": "^13.0.0"
     },
     "nsolid": {
         "saas": "Ht/xQw(E)dZ.5%9h6V%s^n4qM{MiVt&z/#?(PzA(1ea85736-276c-455a-8ab7-92e5449683ae.prod.proxy.saas.nodesource.io:9001",
