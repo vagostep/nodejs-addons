@@ -32,13 +32,12 @@ function compute() {
 
 
 const server = http.createServer((req, res) => {
-  console.log(`Request to ${req.url}`);
 
   // Definir los endpoints
   if (req.method === 'GET' && req.url === '/long-loop') {
     
     compute();
-    const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
+    const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
 
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(`The function was executed in ${transformMilisecondsToSeconds(elapsedTime.duration)} seconds.\n`);

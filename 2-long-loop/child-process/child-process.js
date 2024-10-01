@@ -19,7 +19,7 @@ function compute() {
             performance.mark("intensive-loop-end");
         
             // Calculating elapse time
-            const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
+            const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
         
             resolve(transformMilisecondsToSeconds(elapsedTime.duration));
         });
@@ -28,7 +28,6 @@ function compute() {
 
 const server = http.createServer((req, res) => {
 
-    console.log(`Request to ${req.url}`);
     // Definir los endpoints
     if (req.method === 'GET' && req.url === '/long-loop') {
    

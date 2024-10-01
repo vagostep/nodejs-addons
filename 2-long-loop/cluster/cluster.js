@@ -10,14 +10,8 @@ const PORT = 3000;
 if (cluster.isPrimary) {
     console.log(`Master ${process.pid} is running`);
    
-    // Crea el primer grupo de workers (para el primer tipo de endpoint)
-    for (let i = 0; i < Math.floor(numWorkers / 2); i++) {
+    for (let i = 0; i < numWorkers; i++) {
         cluster.fork({ CLUSTER_TYPE: 'regular' });
-    }
-
-    // Crea el segundo grupo de workers (para el segundo tipo de endpoint)
-    for (let i = 0; i < Math.ceil(numWorkers / 2); i++) {
-        cluster.fork({ CLUSTER_TYPE: 'intensive' });
     }
 
     // Manejo de eventos para cuando un worker se cierra
@@ -27,12 +21,10 @@ if (cluster.isPrimary) {
 
 } else {
 
-    const clusterType = process.env.CLUSTER_TYPE;
-    console.log(`Worker ${process.pid} started of type ${clusterType}`);
+    console.log(`Worker ${process.pid} started`);
 
     const server = http.createServer((req, res) => {
-        console.log('Request', req.url, clusterType)
-        console.log(`Request to ${req.url}`);
+        console.log('Request to worker ', process.pid)
         // Definir los endpoints
         if (req.method === 'GET' && req.url === '/long-loop') {
             compute();
@@ -40,6 +32,7 @@ if (cluster.isPrimary) {
             const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end(`The function was executed in ${transformMilisecondsToSeconds(elapsedTime.duration)} seconds.\n`);
+
         } else if (req.method === 'GET' && req.url === '/open-server'){
             
             res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -48,7 +41,7 @@ if (cluster.isPrimary) {
     });
     
     server.listen(PORT, () => {
-    console.log(`Server listen on http://localhost:${PORT}`);
+        console.log(`Server listen on http://localhost:${PORT}`);
     });
  
 }

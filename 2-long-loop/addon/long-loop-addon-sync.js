@@ -12,7 +12,7 @@ function compute() {
     performance.mark("intensive-loop-end");
 
     // Calcular el tiempo transcurrido
-    const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
+    const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
     
     console.log(`La función se ejecutó en ${elapsedTime.duration} milisegundos.`);
 }

@@ -59,11 +59,10 @@ Napi::Value StartLongLoopAsyncWork(const Napi::CallbackInfo& info) {
     AsyncWorkData* asyncData = new AsyncWorkData();
     asyncData->callback = Napi::Persistent(callback);
 
-    // Crear la tarea asincrónica
     napi_value resource_name;
     napi_create_string_utf8(env, "LongLoopAsyncWork", NAPI_AUTO_LENGTH, &resource_name);
 
-    //
+    // Crea la tarea asíncrona
     napi_async_work work;
     napi_create_async_work(env, nullptr, resource_name, LongLoopAsyncWork, CompleteLongLoopAsyncWork, asyncData, &work);
   
