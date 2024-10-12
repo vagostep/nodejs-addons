@@ -1,39 +1,49 @@
 #include <napi.h>
 #include <v8.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 using namespace v8;
 
-Napi::String CalculateRetirement(const Napi::CallbackInfo& info) {
+Napi::Value LoadingExternalFiles(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    // Obtener el objeto JavaScript
-    Napi::Object obj = info[0].As<Napi::Object>();
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "You need to provide a path to file").ThrowAsJavaScriptException();
+        return env.Null();
+    }
 
-    // Acceder a las propiedades de la operación
-    int salary = obj.Get(Napi::String::New(env, "salary")).As<Napi::Number>().Int32Value();
-    int age = obj.Get(Napi::String::New(env, "age")).As<Napi::Number>().Int32Value();
+    // Obtener el nombre del archivo desde el argumento
+    std::string filename = info[0].As<Napi::String>().Utf8Value();
 
-    // Crear el script que realiza la operación
-    std::string script = R"(
-        function calculate(a, b) {
-            return ((65 - a) * 12) * b;
-        }
-        calculate(%d, %d);
-    )";
+    // Leer el contenido del archivo
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        Napi::Error::New(env, "No se pudo abrir el archivo").ThrowAsJavaScriptException();
+        return Napi::String();
+    }
 
-    // Formatear el script con los valores
-    char buffer[120];
-    snprintf(buffer, sizeof(buffer), script.c_str(), age, salary);
-    Napi::Value result = env.RunScript(buffer);
-    std::string str = std::to_string(result.As<Napi::Number>().Int32Value());
+    std::stringstream buffer;
+    buffer << file.rdbuf();  // Lee el contenido del archivo
+    file.close();
 
-    // Devolver el HTML como un string
-    return Napi::String::New(env, str);
+    try {
+        // Ejecutando el Script usando la instancia de V8 de nuestro proceso NodeJs
+        Napi::Value result = env.RunScript(buffer.str());
+        
+        return Napi::Boolean::New(env, true);
+
+    } catch (int error) {
+        Napi::TypeError::New(env, "Error running V8 script!").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
 }
 
 // Inicializa el addon
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "calculateRetirement"), Napi::Function::New(env, CalculateRetirement));
+    exports.Set(Napi::String::New(env, "loadingExternalFiles"), Napi::Function::New(env, LoadingExternalFiles));
     return exports;
 }
 

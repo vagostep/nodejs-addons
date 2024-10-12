@@ -1,7 +1,7 @@
 import { Worker } from 'worker_threads';
 import http from 'http';
 import { performance } from "node:perf_hooks";
-import { transformMilisecondsToSeconds } from "../../utils/utils.js";
+import { transfromMilisecondsToSeconds } from "../../utils/utils.js";
 
 const PORT = 3000;
 function compute() {
@@ -22,7 +22,7 @@ function compute() {
         // Calculating elapse time
         const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
     
-        resolve(transformMilisecondsToSeconds(elapsedTime.duration));
+        resolve(transfromMilisecondsToSeconds(elapsedTime.duration));
     });
   });
 }

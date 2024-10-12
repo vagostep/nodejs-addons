@@ -1,7 +1,7 @@
 import bindings from "bindings";
 import http from 'http';
 import { performance } from "node:perf_hooks";
-import { transformMilisecondsToSeconds } from "../../utils/utils.js";
+import { transfromMilisecondsToSeconds } from "../../utils/utils.js";
 
 const PORT = 3000;
 
@@ -27,7 +27,7 @@ function compute() {
         // Calculating elapse time
         const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
     
-        resolve(transformMilisecondsToSeconds(elapsedTime.duration));
+        resolve(transfromMilisecondsToSeconds(elapsedTime.duration));
   
       });
 
@@ -36,20 +36,33 @@ function compute() {
 
 const server = http.createServer((req, res) => {
 
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'OPTIONS, GET',
+    'Content-Type': 'application/json'
+  };
+  
     // Definir los endpoints
-    if (req.method === 'GET' && req.url === '/long-loop') {
+    // Endpoint para verificacion CORS
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, headers);
+    res.end();
+  } else if (req.url === '/long-loop') {
    
       console.log('/open-loop');
       compute().then((result) => {
-        console.log('result', result);
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end(`The function was executed in ${result} seconds.\n`);
+        console.log(`El método fue ejecutado en ${result} segundos.`);
+        res.writeHead(200, headers);
+        res.end(JSON.stringify({
+          data: `El método fue ejecutado en ${result} segundos.\n`
+        }));
       });
-    } else if (req.method === 'GET' && req.url === '/open-server'){
+    } else if (req.url === '/open-server'){
       
-      console.log('/open-server');
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      res.end('Server response\n');
+      res.writeHead(200, headers);
+      res.end(JSON.stringify({
+        data: `Llamada finalizada\n`
+      }));
     }
   });
   

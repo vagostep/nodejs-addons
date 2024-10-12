@@ -19,7 +19,7 @@
         },
         {
             "target_name": "long-loop",
-            "sources": [ "./2-long-loop/addon/long-loop.cc" ],
+            "sources": [ "./2-long-loop/1/long-loop.cc" ],
             "include_dirs": [
                 "<!@(node -p \"require('node-addon-api').include\")"
             ],

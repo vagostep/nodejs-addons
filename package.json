@@ -8,11 +8,13 @@
         "configure": "node-gyp configure",
         "build": "node-gyp rebuild",
         "clean": "node-gyp clean",
-        "nsolid": "nsolid"
+        "start": "node --",
+        "nsolid:run": "nsolid"
     },
     "dependencies": {
+        "axios": "^1.7.7",
         "bindings": "^1.5.0",
-        "dayjs": "^1.11.13",
+        "express": "^4.21.1",
         "node-addon-api": "^8.1.0"
     },
     "nsolid": {

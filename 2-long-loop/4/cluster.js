@@ -1,7 +1,7 @@
 import cluster from 'cluster';
 import http from 'http';
 import { performance } from "node:perf_hooks";
-import { transformMilisecondsToSeconds } from "../../utils/utils.js";
+import { transfromMilisecondsToSeconds } from "../../utils/utils.js";
 
 // const numWorkers = os.cpus().length;
 const numWorkers = 2;
@@ -31,7 +31,7 @@ if (cluster.isPrimary) {
         
             const elapsedTime = performance.measure("intensive-loop-start", "intensive-loop-start");
             res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end(`The function was executed in ${transformMilisecondsToSeconds(elapsedTime.duration)} seconds.\n`);
+            res.end(`The function was executed in ${transfromMilisecondsToSeconds(elapsedTime.duration)} seconds.\n`);
 
         } else if (req.method === 'GET' && req.url === '/open-server'){
             

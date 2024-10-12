@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeJs Talk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        button {
+            width: 200px; /* Establecer un ancho fijo para mantener el tamaño */
+            height: 50px; /* Establecer una altura fija */
+            font-size: 16px;
+            position: relative; /* Necesario para el spinner */
+            cursor: pointer;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            padding: 0; /* Eliminar padding adicional */
+            overflow: hidden; /* Ocultar el contenido que desborda */
+            display: flex; 
+            justify-content: center; /* Centrar contenido en el eje horizontal */
+            align-items: center; /* Centrar contenido en el eje vertical */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc; /* Color del botón deshabilitado */
+            cursor: not-allowed;
+        }
+        .spinner {
+            display: none; /* Oculto por defecto */
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3; /* Color del fondo del spinner */
+            border-top: 3px solid #3498db; /* Color de la parte superior del spinner */
+            border-radius: 50%;
+            animation: spin 1s linear infinite; /* Animación de giro */
+            position: absolute; /* Para posicionarlo sobre el botón */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .button-text {
+            display: inline; /* Mostrar texto por defecto */
+        }
+        .hidden {
+            display: none; /* Clase para ocultar elementos */
+        }
+        .result {
+            margin-top: 10px; /* Espacio entre el botón y el resultado */
+            font-size: 14px; /* Tamaño de fuente para el resultado */
+            font-weight: 300;
+            position: relative;
+            top: 12px;
+            color: #333; /* Color del texto del resultado */
+        }
+        #section1 {
+            grid-area: 1 / 1;
+        }
+        #section2 {
+            grid-area: 1 / 2;
+        }
+        #section3 {
+            grid-area: 2 / 1;
+        }
+        #section4 {
+            grid-area: 2 / 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="section" id="section1">
+        <h2>Endpoint Bloqueante</h2>
+        <button id="btn1" onclick="callLongLoop(this)">
+            <span class="button-text">Disponible</span>
+            <div class="spinner"></div>
+        </button>
+        <div class="result" id="result1"></div>
+    </div>
+    <div class="section" id="section2">
+        <h2>Endpoint libre</h2>
+        <button id="btn2" onclick="callOpenServer(this)">
+            <span class="button-text">Disponible</span>
+            <div class="spinner"></div>
+        </button>
+    </div>
+    <div class="section" id="section3">
+        <h2>Endpoint libre</h2>
+        <button id="btn3" onclick="callOpenServer(this)">
+            <span class="button-text">Disponible</span>
+            <div class="spinner"></div>
+        </button>
+    </div>
+    <div class="section" id="section4">
+        <h2>Endpoint libre</h2>
+        <button id="btn4" onclick="callOpenServer(this)">
+            <span class="button-text">Disponible</span>
+            <div class="spinner"></div>
+        </button>
+    </div>
+
+    <script>
+        const URL = 'http://localhost:3000';
+
+        async function callLongLoop(button) {
+            const spinner = button.querySelector('.spinner');
+            const buttonText = button.querySelector('.button-text');
+            const resultDiv = document.getElementById('result1');
+            button.disabled = true; // Deshabilitar el botón
+            buttonText.classList.add('hidden'); // Ocultar el texto
+            spinner.style.display = 'block'; // Mostrar el spinner
+            resultDiv.innerHTML = '';
+
+            const response = await fetch(`${URL}/long-loop`);
+            const body = await response.json();
+       
+            resultDiv.innerHTML = `${body.data}`;
+            
+            button.disabled = false; // Rehabilitar el botón
+            buttonText.classList.remove('hidden'); // Mostrar el texto
+            spinner.style.display = 'none'; // Ocultar el spinner
+        }
+
+        async function callOpenServer(button) {
+            const spinner = button.querySelector('.spinner');
+            const buttonText = button.querySelector('.button-text');
+            button.disabled = true; // Deshabilitar el botón
+            buttonText.classList.add('hidden'); // Ocultar el texto
+            spinner.style.display = 'block'; // Mostrar el spinner
+            
+            const response = await fetch(`${URL}/open-server`);
+
+            button.disabled = false; // Rehabilitar el botón
+            buttonText.classList.remove('hidden'); // Mostrar el texto
+            spinner.style.display = 'none'; // Ocultar el spinner
+        }
+    </script>
+</body>
+</html>
