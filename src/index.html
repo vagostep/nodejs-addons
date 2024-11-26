@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+    <link rel="icon" type="image/x-icon" href="assets/icon.png">
     <title>NodeJs Talk</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans';
             margin: 0;
             padding: 0;
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             height: 100vh;
+            background-color: #333333;
         }
+
         .section {
             display: flex;
             flex-direction: column;
@@ -23,139 +28,220 @@
             border-radius: 5px;
             margin: 10px;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: #273239;
+            color: white;
         }
+
         button {
-            width: 200px; /* Establecer un ancho fijo para mantener el tamaño */
-            height: 50px; /* Establecer una altura fija */
+            width: 200px;
+            /* Establecer un ancho fijo para mantener el tamaño */
+            height: 50px;
+            /* Establecer una altura fija */
             font-size: 16px;
-            position: relative; /* Necesario para el spinner */
+            font-weight: 600;
+            position: relative;
+            /* Necesario para el spinner */
             cursor: pointer;
             border: none;
-            color: white;
-            background-color: #007BFF;
+            color: #333333;
+            background-color: #339933ff;
             border-radius: 5px;
-            padding: 0; /* Eliminar padding adicional */
-            overflow: hidden; /* Ocultar el contenido que desborda */
-            display: flex; 
-            justify-content: center; /* Centrar contenido en el eje horizontal */
-            align-items: center; /* Centrar contenido en el eje vertical */
+            padding: 0;
+            /* Eliminar padding adicional */
+            overflow: hidden;
+            /* Ocultar el contenido que desborda */
+            display: flex;
+            justify-content: center;
+            /* Centrar contenido en el eje horizontal */
+            align-items: center;
+            /* Centrar contenido en el eje vertical */
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #66cc33ff;
         }
+
         button:disabled {
-            background-color: #cccccc; /* Color del botón deshabilitado */
+            background-color: #333333;
+            /* Color del botón deshabilitado */
             cursor: not-allowed;
         }
+
         .spinner {
-            display: none; /* Oculto por defecto */
+            display: none;
+            /* Oculto por defecto */
             width: 20px;
             height: 20px;
-            border: 3px solid #f3f3f3; /* Color del fondo del spinner */
-            border-top: 3px solid #3498db; /* Color de la parte superior del spinner */
+            border: 3px solid white;
+            /* Color del fondo del spinner */
+            border-top: 3px solid #66cc33ff;
+            /* Color de la parte superior del spinner */
             border-radius: 50%;
-            animation: spin 1s linear infinite; /* Animación de giro */
-            position: absolute; /* Para posicionarlo sobre el botón */
+            animation: spin 1s linear infinite;
+            /* Animación de giro */
+            position: absolute;
+            /* Para posicionarlo sobre el botón */
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .button-text {
-            display: inline; /* Mostrar texto por defecto */
+            display: inline;
+            /* Mostrar texto por defecto */
         }
+
         .hidden {
-            display: none; /* Clase para ocultar elementos */
+            display: none;
+            /* Clase para ocultar elementos */
         }
+
         .result {
-            margin-top: 10px; /* Espacio entre el botón y el resultado */
-            font-size: 14px; /* Tamaño de fuente para el resultado */
+            margin-top: 10px;
+            /* Espacio entre el botón y el resultado */
+            font-size: 14px;
+            /* Tamaño de fuente para el resultado */
             font-weight: 300;
             position: relative;
             top: 12px;
-            color: #333; /* Color del texto del resultado */
+            color: white;
+            /* Color del texto del resultado */
         }
+
         #section1 {
             grid-area: 1 / 1;
         }
+
         #section2 {
             grid-area: 1 / 2;
         }
+
         #section3 {
             grid-area: 2 / 1;
         }
+
         #section4 {
             grid-area: 2 / 2;
         }
+
+        .icon {
+            height: 64px;
+            width: 64px;
+            display: block;
+        }
+
+        .result {
+            min-height: 20px;
+        }
     </style>
 </head>
+
 <body>
     <div class="section" id="section1">
+        <img src="assets/check.png" class="icon enable" />
+        <img src="assets/error.png" class="icon disable" style="display: none;" />
         <h2>Endpoint Bloqueante</h2>
         <button id="btn1" onclick="callLongLoop(this)">
-            <span class="button-text">Disponible</span>
+            <span class="button-text">Llamar</span>
             <div class="spinner"></div>
         </button>
         <div class="result" id="result1"></div>
     </div>
     <div class="section" id="section2">
+        <img src="assets/check.png" class="icon enable" />
+        <img src="assets/error.png" class="icon disable" style="display: none;" />
         <h2>Endpoint libre</h2>
         <button id="btn2" onclick="callOpenServer(this)">
-            <span class="button-text">Disponible</span>
+            <span class="button-text">Llamar</span>
             <div class="spinner"></div>
         </button>
+        <div class="result" id="result2"></div>
     </div>
     <div class="section" id="section3">
+        <img src="assets/check.png" class="icon enable" />
+        <img src="assets/error.png" class="icon disable" style="display: none;" />
         <h2>Endpoint libre</h2>
         <button id="btn3" onclick="callOpenServer(this)">
-            <span class="button-text">Disponible</span>
+            <span class="button-text">Llamar</span>
             <div class="spinner"></div>
         </button>
+        <div class="result" id="result3"></div>
     </div>
     <div class="section" id="section4">
+        <img src="assets/check.png" class="icon enable" />
+        <img src="assets/error.png" class="icon disable" style="display: none;" />
         <h2>Endpoint libre</h2>
         <button id="btn4" onclick="callOpenServer(this)">
-            <span class="button-text">Disponible</span>
+            <span class="button-text">Llamar</span>
             <div class="spinner"></div>
         </button>
+        <div class="result" id="result4"></div>
     </div>
 
     <script>
         const URL = 'http://localhost:3000';
 
         async function callLongLoop(button) {
+            const section = button.closest('.section')
+            const enableIcon = section.querySelector('.icon.enable');
+            const disableIcon = section.querySelector('.icon.disable');
             const spinner = button.querySelector('.spinner');
             const buttonText = button.querySelector('.button-text');
-            const resultDiv = document.getElementById('result1');
+            const resultDiv = section.querySelector('.result');
             button.disabled = true; // Deshabilitar el botón
             buttonText.classList.add('hidden'); // Ocultar el texto
             spinner.style.display = 'block'; // Mostrar el spinner
             resultDiv.innerHTML = '';
+            enableIcon.style.display = 'none';
+            disableIcon.style.display = 'block'
 
             const response = await fetch(`${URL}/long-loop`);
             const body = await response.json();
-       
+
             resultDiv.innerHTML = `${body.data}`;
-            
+
             button.disabled = false; // Rehabilitar el botón
             buttonText.classList.remove('hidden'); // Mostrar el texto
             spinner.style.display = 'none'; // Ocultar el spinner
+            enableIcon.style.display = 'block';
+            disableIcon.style.display = 'none'
         }
 
         async function callOpenServer(button) {
+            const section = button.closest('.section')
+            const enableIcon = section.querySelector('.icon.enable');
+            const disableIcon = section.querySelector('.icon.disable');
             const spinner = button.querySelector('.spinner');
             const buttonText = button.querySelector('.button-text');
+            const resultDiv = section.querySelector('.result');
             button.disabled = true; // Deshabilitar el botón
             buttonText.classList.add('hidden'); // Ocultar el texto
             spinner.style.display = 'block'; // Mostrar el spinner
-            
+            resultDiv.innerHTML = '';
+            enableIcon.style.display = 'none';
+            disableIcon.style.display = 'block'
+
+            const startTime = new Date();
             const response = await fetch(`${URL}/open-server`);
+            const endTime = new Date(); // Tiempo final
+            const duration = endTime - startTime;
+
+            resultDiv.innerHTML = `El endpoint respondió en ${(duration / 1000)?.toFixed(2)} segundos.\n`;
 
             button.disabled = false; // Rehabilitar el botón
             buttonText.classList.remove('hidden'); // Mostrar el texto
             spinner.style.display = 'none'; // Ocultar el spinner
+            enableIcon.style.display = 'block';
+            disableIcon.style.display = 'none'
         }
     </script>
 </body>
+
 </html>

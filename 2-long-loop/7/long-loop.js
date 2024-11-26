@@ -34,16 +34,19 @@ const server = http.createServer((req, res) => {
 
     // Calcula el tiempo de ejecución
     const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
-    console.log(`El método fue ejecutado en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.`);
+    console.log(`El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.`);
     res.writeHead(200, headers);
     res.end(JSON.stringify({
-      data: `El método fue ejecutado en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.\n`
+      data: `El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.\n`
     }));
   } else if (req.url === '/open-server'){
     
+    performance.mark("open-server-start");
     res.writeHead(200, headers);
+    performance.mark("open-server-end");
+    const elapsedTime = performance.measure("measure", "open-server-start", "open-server-end");
     res.end(JSON.stringify({
-      data: `Llamada finalizada\n`
+      data: `El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.\n`
     }));
   }
 });

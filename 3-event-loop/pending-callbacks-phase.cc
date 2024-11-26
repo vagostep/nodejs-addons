@@ -1,32 +1,35 @@
 #include <napi.h>
 #include <uv.h>
 
-struct WorkData {
-    Napi::FunctionReference callback; // Almacena el callback de JavaScript
-    int result; // Almacena el resultado de la tarea
+struct AsyncWorkData {
+    Napi::FunctionReference callback;
+    int64_t result;
 };
 
-// Esta función se ejecuta en el hilo de trabajo
-void DoWork(uv_work_t* request) {
-    // Do something
+void CompleteAsyncTask(napi_env env, napi_status status, void* data) {
+    Napi::Env napiEnv = Napi::Env(env);
+    Napi::HandleScope scope(napiEnv);
+    AsyncWorkData* asyncData = static_cast<AsyncWorkData*>(data);
+    
+    if (status != napi_ok) {
+        asyncData->callback.MakeCallback(
+            Napi::Object::New(napiEnv), 
+            { Napi::String::New(napiEnv, "Async work failed"), napiEnv.Null() }
+        );
+    } else {
+        asyncData->callback.MakeCallback(
+            Napi::Object::New(napiEnv), 
+            { napiEnv.Null(), Napi::BigInt::New(napiEnv, asyncData->result) }
+        );
+    }
+
+    delete asyncData;
 }
 
-// Esta función se ejecuta en el hilo principal después de que se completa el trabajo
-void AfterWork(uv_work_t* request, int /* status */) {
-    WorkData* data = static_cast<WorkData*>(request->data);
-    
-    Napi::Env env = data->callback.Env();
-    Napi::HandleScope scope(env);
+void AsyncTask(napi_env env, void* data) {
+  AsyncWorkData* asyncData = static_cast<AsyncWorkData*>(data);
 
-    // Llama al callback de JavaScript con el resultado
-    data->callback.MakeCallback(
-        Napi::Object::New(env),
-        { Napi::String::New(env, "Pending callbacks event triggered!") }
-    );
-
-    // Limpiar
-    delete data; // Liberar la memoria
-    delete request; // Liberar el objeto de trabajo
+  asyncData->result = 1;
 }
 
 Napi::Value AddToPendingCallbacksQueue(const Napi::CallbackInfo& info) {
@@ -38,16 +41,17 @@ Napi::Value AddToPendingCallbacksQueue(const Napi::CallbackInfo& info) {
         return env.Null();
     }
 
-    // Crear datos de trabajo
-    WorkData* data = new WorkData;
-    data->callback = Napi::Persistent(info[0].As<Napi::Function>()); // Almacenar el callback de forma persistente
-
-    // Crear un objeto de trabajo
-    uv_work_t* request = new uv_work_t;
-    request->data = data;
-
-    // Encolar el trabajo
-    uv_queue_work(uv_default_loop(), request, DoWork, AfterWork);
+    // Crear los datos de la tarea asincrónica
+    AsyncWorkData* asyncData = new AsyncWorkData();
+    asyncData->callback = Napi::Persistent(info[0].As<Napi::Function>());  // Almacenar el callback de forma persistente
+    napi_value resource_name;
+    napi_create_string_utf8(env, "PendingCallbacks", NAPI_AUTO_LENGTH, &resource_name);
+    // Crea la tarea asíncrona
+    napi_async_work work;
+    napi_create_async_work(env, nullptr, resource_name, AsyncTask, CompleteAsyncTask, asyncData, &work);
+  
+    // Colocar la tarea en el event loop
+    napi_queue_async_work(env, work);
 
     return Napi::String::New(env, "Work started");
 }

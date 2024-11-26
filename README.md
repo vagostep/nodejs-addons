@@ -20,7 +20,11 @@
 
 * Install NSolid
 
-```npm install -g solid```
+```npm install -g nsolid```
+
+or
+
+Download from (official site)[https://docs.nodesource.com/docs/nsolid/quickstart/local]
 
 # Executing 
 

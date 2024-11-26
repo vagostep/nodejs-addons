@@ -1,27 +1,24 @@
 import bindings from "bindings";
 import { fileURLToPath } from 'url';
 import fs from "fs";
+import chalk from 'chalk';
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const eventLoopQueues = bindings("event-loop-queues");
 
+eventLoopQueues.addToPendingCallbacksQueue(() => console.log(chalk.green('addToPendingCallbacksQueue')));
+eventLoopQueues.addToTimerPhase(() => console.log(chalk.yellow('addToTimerPhase')), 0);
+eventLoopQueues.addToCheckPhase(() => console.log(chalk.magenta('addToCheckPhase')));
 
-eventLoopQueues.addToTimerPhase(() => console.log('addToTimerPhase'), 0);
-eventLoopQueues.addToCheckPhase(() => console.log('addToCheckPhase'));
-eventLoopQueues.addToCloseQueue(() => console.log('addToCloseQueue'));
-eventLoopQueues.addToPendingCallbacksQueue(() => console.log('addToPendingCallbacksQueue'));
-
-setTimeout(() => console.log('setTimeout'), 0);
+setTimeout(() => console.log(chalk.yellow('setTimeout')), 0);
 const interval = setInterval(() => {
     clearInterval(interval);
-    console.log('setInterval');
+    console.log(chalk.yellow('setInterval'));
 }, 0);
-process.nextTick(() => console.log('nextTick'));
-Promise.resolve().then(() => console.log('promise'));
-setImmediate(() => console.log('setImmediate'));
+process.nextTick(() => console.log(chalk.blue('nextTick')));
+setImmediate(() => console.log(chalk.magenta('setImmediate')));
+Promise.resolve().then(() => console.log(chalk.blue('promise')));
 
-const readableStream = fs.createReadStream(__filename);
-readableStream.close();
-readableStream.on("close", () => {
-    console.log("This is from readableStream close event callback");
-});
+fs.readFile(__filename, (err, data) => {
+    console.log(chalk.green('This is from read file async'));
+})
