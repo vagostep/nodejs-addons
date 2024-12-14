@@ -5,15 +5,11 @@ import { transfromMilisecondsToSeconds } from "../../utils/utils.js";
 const PORT = 3000;
 function compute() {
 
-  // Empieza medición
-  performance.mark("intensive-loop-start");
   let result = 0;
   for (let i = 0; i < 1e10; ++i) {
     result += i;
   }
 
-  // Finaliza medicion
-  performance.mark("intensive-loop-end");
 }
 
 const server = http.createServer((req, res) => {
@@ -24,27 +20,29 @@ const server = http.createServer((req, res) => {
     'Content-Type': 'application/json'
   };
 
-  // Endpoint para verificacion CORS
   if (req.method === 'OPTIONS') {
     res.writeHead(204, headers);
     res.end();
   } else if (req.url === '/long-loop') {
  
+    performance.mark("intensive-loop-start");
     compute();
+    performance.mark("intensive-loop-end");
 
-    // Calcula el tiempo de ejecución
-    const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
-    console.log(`El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.`);
     res.writeHead(200, headers);
+    const elapsedTime = performance.measure("measure", "intensive-loop-start", "intensive-loop-end");
+
     res.end(JSON.stringify({
       data: `El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.\n`
     }));
   } else if (req.url === '/open-server'){
     
     performance.mark("open-server-start");
-    res.writeHead(200, headers);
     performance.mark("open-server-end");
+    
+    res.writeHead(200, headers);
     const elapsedTime = performance.measure("measure", "open-server-start", "open-server-end");
+
     res.end(JSON.stringify({
       data: `El endpoint respondió en ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.\n`
     }));

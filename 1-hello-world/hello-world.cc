@@ -2,7 +2,7 @@
 
 // Función simple que retorna un saludo
 Napi::String SayHello(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
+    Napi::Env env = info.Env(); // Entorno de ejecucion
 
     return Napi::String::New(env, "Hello from addon!");
 }

@@ -26,7 +26,7 @@ void TimerCallback(uv_timer_t* handle) {
     });
 }
 
-Napi::Value AddToTimerPhase(const Napi::CallbackInfo& info) {
+Napi::Value AddToTimerQueue(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // Verificar que se pase un callback

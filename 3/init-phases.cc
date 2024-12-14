@@ -2,8 +2,8 @@
 #include "init-phase.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "addToTimerPhase"), Napi::Function::New(env, AddToTimerPhase));
-    exports.Set(Napi::String::New(env, "addToCheckPhase"), Napi::Function::New(env, AddToCheckPhase));
+    exports.Set(Napi::String::New(env, "addToTimerQueue"), Napi::Function::New(env, AddToTimerQueue));
+    exports.Set(Napi::String::New(env, "addToCheckQueue"), Napi::Function::New(env, AddToCheckQueue));
     exports.Set(Napi::String::New(env, "addToPendingCallbacksQueue"), Napi::Function::New(env, AddToPendingCallbacksQueue));
     return exports;
 }

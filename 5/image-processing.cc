@@ -26,10 +26,8 @@ Napi::Value ConvertToGrayscale(const Napi::CallbackInfo &info)
         return Napi::String();
     }
 
-    // Crear un buffer para la imagen en escala de grises
     unsigned char *grayData = new unsigned char[width * height];
 
-    // Convertir a escala de grises
     for (int i = 0; i < width * height; i++) {
         int r = data[i * channels];
         int g = data[i * channels + 1];
@@ -37,10 +35,8 @@ Napi::Value ConvertToGrayscale(const Napi::CallbackInfo &info)
         grayData[i] = static_cast<unsigned char>(0.299 * r + 0.587 * g + 0.114 * b);
     }
 
-    // Guardar la imagen en escala de grises
     stbi_write_png(outputFilePath.c_str(), width, height, 1, grayData, width);
     
-    // Liberar la memoria
     stbi_image_free(data);
     delete[] grayData;
 

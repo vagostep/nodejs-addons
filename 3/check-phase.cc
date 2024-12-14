@@ -28,7 +28,7 @@ void CheckCallback(uv_check_t* handle) {
     });
 }
 
-Napi::Value AddToCheckPhase(const Napi::CallbackInfo& info) {
+Napi::Value AddToCheckQueue(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // Verificar que se pase un callback

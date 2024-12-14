@@ -3,8 +3,8 @@
 
 #include <napi.h>
 
-Napi::Value AddToTimerPhase(const Napi::CallbackInfo& info);
-Napi::Value AddToCheckPhase(const Napi::CallbackInfo& info);
+Napi::Value AddToTimerQueue(const Napi::CallbackInfo& info);
+Napi::Value AddToCheckQueue(const Napi::CallbackInfo& info);
 Napi::Value AddToCloseQueue(const Napi::CallbackInfo& info);
 Napi::Value AddToPendingCallbacksQueue(const Napi::CallbackInfo& info);
 
