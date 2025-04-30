@@ -12,15 +12,9 @@ const num = 45; // Puedes ajustar este número
 performance.mark("complex-calc-start");
 const result = fibonacci(num);
 performance.mark("complex-calc-end");
-const elapsedTime = performance.measure(
-  "measure",
-  "complex-calc-start",
-  "complex-calc-end"
-);
-console.log(
-  `Se demoró ${transfromMilisecondsToSeconds(
-    elapsedTime.duration
-  )} segundos.`
+const elapsedTime = performance.measure("measure", "complex-calc-start", "complex-calc-end");
+
+console.log(`Se demoró ${transfromMilisecondsToSeconds(elapsedTime.duration)} segundos.`
 );
 
 console.log(`Fibonacci de ${num} es ${result}`);

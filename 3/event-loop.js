@@ -7,9 +7,9 @@ const eventLoopQueues = bindings("event-loop-queues");
 
 const __filename = fileURLToPath(import.meta.url); 
 
-eventLoopQueues.addToPendingCallbacksQueue(() => console.log(chalk.green('addToPendingCallbacksQueue')));
 eventLoopQueues.addToTimerQueue(() => console.log(chalk.yellow('addToTimerQueue')), 0);
 eventLoopQueues.addToCheckQueue(() => console.log(chalk.magenta('addToCheckQueue')));
+eventLoopQueues.addToPendingCallbacksQueue(() => console.log(chalk.green('addToPendingCallbacksQueue')));
 
 setTimeout(() => console.log('setTimeout'), 0);
 const interval = setInterval(() => {
